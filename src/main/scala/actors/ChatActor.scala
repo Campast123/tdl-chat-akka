@@ -48,14 +48,11 @@ object ChatActor {
     }
 
     def doChat(user: User): Unit ={
-      println("doChat")
       nonBlockingRead(user.in).foreach{ input =>
         if(input == ":quit"){
           chatActor ! Logout(user)
         } else {
-          for((n, u) <- users){
-            chatActor ! SendMessageChat(user,input)
-          }
+          chatActor ! SendMessageChat(user,input)
         }
       }
     }
