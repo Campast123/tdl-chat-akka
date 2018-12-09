@@ -30,7 +30,7 @@ object ActorChatServer extends App{
         out.println("What is your name?")
         val name = in.readLine()
         val user = User(name,sock,in,out)
-        chatActor ! Join(user, actorSystem)
+        chatActor ! Join(user)
       }
     }
   }
