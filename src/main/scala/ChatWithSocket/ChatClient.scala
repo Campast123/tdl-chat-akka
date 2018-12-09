@@ -1,9 +1,10 @@
-package actors
+package ChatWithSocket
 
 import java.io.{BufferedReader, InputStreamReader, PrintStream}
-import java.net.{ServerSocket, Socket}
-import scala.concurrent.Future
+import java.net.Socket
 import scala.concurrent.ExecutionContext.Implicits.global
+
+import scala.concurrent.Future
 
 object ChatClient extends App {
   println("Macking socket")
