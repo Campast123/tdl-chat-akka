@@ -6,23 +6,22 @@ import java.net.Socket
 import actors.ChatActor._
 import akka.actor.Actor
 
-class UserActor(in: BufferedReader, out: PrintStream, sock: Socket) extends Actor{
+class UserActor(user: User) extends Actor{
 
   def receive = {
     case ChatMessage(message) =>
-      out.println(message)
+      this.user.out.println(message)
 
     case doChat() =>
       this.doChat()
   }
 
   def doChat(): Unit ={
-    nonBlockingRead(this.in).foreach{ input =>
+    nonBlockingRead(this.user.in).foreach{ input =>
       if(input == ":quit"){
         this.logout()
       } else {
-        out.println("asddddddddddddddd")
-        out.println(input)
+        context.parent ! SendMessageChat(user, input)
       }
     }
   }
@@ -32,7 +31,7 @@ class UserActor(in: BufferedReader, out: PrintStream, sock: Socket) extends Acto
   }
 
   def logout() = {
-    this.sock.close()
+    this.user.sock.close()
   }
 
 
