@@ -1,14 +1,16 @@
-package actors
+package ChatWithSocket
 
 import java.io.{BufferedReader, InputStreamReader, PrintStream}
 import java.net.{ServerSocket, Socket}
 import java.util.concurrent.ConcurrentHashMap
 
-import scala.concurrent.Future
+import actors.User
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.collection.JavaConverters._
+
 object ChatServer extends App{
-  case class User(name: String, sock: Socket, in: BufferedReader, out: PrintStream)
   val users = new ConcurrentHashMap[String,User]().asScala
   Future { checkConnections()}
   while(true){
@@ -51,4 +53,3 @@ object ChatServer extends App{
   }
 
 }
-
