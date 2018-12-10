@@ -19,7 +19,7 @@ class UserActor(user: User) extends Actor{
   def doChat(): Unit ={
     nonBlockingRead(this.user.in).foreach{ input =>
       if(input == ":quit"){
-        this.logout()
+        context.parent ! Logout(this.user)
       } else {
         context.parent ! SendMessageChat(user, input)
       }
@@ -28,10 +28,6 @@ class UserActor(user: User) extends Actor{
 
   def nonBlockingRead(in: BufferedReader) : Option[String] = {
     if(in.ready()) Some(in.readLine()) else None
-  }
-
-  def logout() = {
-    this.user.sock.close()
   }
 
 
