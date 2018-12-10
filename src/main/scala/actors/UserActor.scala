@@ -1,34 +1,40 @@
 package actors
 
-import java.io.{BufferedReader, PrintStream}
-import java.net.Socket
+import java.io.{BufferedReader}
 
 import actors.ChatActor._
 import akka.actor.Actor
 
-class UserActor(user: User) extends Actor{
+object UserActor {
 
-  def receive = {
-    case ChatMessage(message) =>
-      this.user.out.println(message)
+  sealed trait Event
+  final case class ListenNewInput() extends Event
+  final case class PrintMessage(message: String) extends Event
 
-    case doChat() =>
-      this.doChat()
-  }
+  class UserActor(user: User) extends Actor {
 
-  def doChat(): Unit ={
-    nonBlockingRead(this.user.in).foreach{ input =>
-      if(input == ":quit"){
-        context.parent ! Logout(this.user)
-      } else {
-        context.parent ! SendMessageChat(user, input)
+    def receive = {
+      case PrintMessage(message) =>
+        this.user.out.println(message)
+
+      case ListenNewInput() =>
+        this.listenNewInput()
+    }
+
+    def listenNewInput(): Unit = {
+      nonBlockingRead(this.user.in).foreach { input =>
+        if (input == ":quit") {
+          context.parent ! Logout(this.user)
+        } else {
+          context.parent ! SendMessageChat(this.user, input)
+        }
       }
     }
-  }
 
-  def nonBlockingRead(in: BufferedReader) : Option[String] = {
-    if(in.ready()) Some(in.readLine()) else None
-  }
+    def nonBlockingRead(in: BufferedReader): Option[String] = {
+      if (in.ready()) Some(in.readLine()) else None
+    }
 
+  }
 
 }

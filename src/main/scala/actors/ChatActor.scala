@@ -2,7 +2,8 @@ package actors
 
 import java.util.concurrent.ConcurrentHashMap
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import actors.UserActor.{ListenNewInput, PrintMessage, UserActor}
+import akka.actor.{Actor, ActorRef, Props}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -13,9 +14,7 @@ object ChatActor {
   final case class Join(user: User) extends Event
   final case class Logout(user: User) extends Event
   final case class SendMessageChat(user: User, message: String) extends Event
-  final case class ChatMessage(message: String) extends Event
   final case class CheckUsersActivity() extends Event
-  final case class doChat() extends Event
 
   class ChatActor extends Actor{
     val users = new ConcurrentHashMap[String,ActorRef]().asScala
@@ -37,7 +36,7 @@ object ChatActor {
     def checkUsersActivity(){
       while(true){
         for ((_, user) <- users){
-          user ! doChat()
+          user ! ListenNewInput()
         }
         Thread.sleep(100)
       }
@@ -46,7 +45,7 @@ object ChatActor {
 
     def messageAllUsers(fromUser: User, message: String) = {
       for((_, u) <- users){
-        u ! ChatMessage(fromUser.name+" : "+message)
+        u ! PrintMessage(fromUser.name+" : "+message)
       }
     }
 

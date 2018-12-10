@@ -17,17 +17,17 @@ object ActorChatServer extends App{
   checkConnections()
 
   def checkConnections(): Unit ={
-    println("Creating server socket")
+    println("Creando server socket")
     val ss = new ServerSocket(4000)
-    println("Created server socket")
+    println("Server socket creado")
     while(true){
-      println("waiting accept server socket")
+      println("Esperando accept server socket")
       val sock = ss.accept()
-      println("accept server socket")
+      println("Accept server socket")
       val in = new BufferedReader(new InputStreamReader(sock.getInputStream))
       val out = new PrintStream(sock.getOutputStream)
       Future {
-        out.println("What is your name?")
+        out.println("Cual es tu nombre?")
         val name = in.readLine()
         val user = User(name,sock,in,out)
         chatActor ! Join(user)
