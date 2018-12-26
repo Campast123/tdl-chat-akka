@@ -19,6 +19,7 @@ object ActorChatClient  extends App{
       if (p != null) println(p)
     }
   }
+  //asd
   var input = ""
   while (input != ":quit"){
     val input = readLine
