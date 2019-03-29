@@ -21,7 +21,7 @@ object ActorChatServer extends App{
     val ss = new ServerSocket(4000)
     println("Server socket creado")
     while(true){
-      println("Esperando accept server socket")
+      println("Waiting accept server socket")
       val sock = ss.accept()
       println("Accept server socket")
       val in = new BufferedReader(new InputStreamReader(sock.getInputStream))
